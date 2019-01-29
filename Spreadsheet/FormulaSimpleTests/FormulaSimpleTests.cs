@@ -3,6 +3,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Formulas;
+//Author:  Andrew Hare  u1033940
 
 namespace FormulaTestCases
 {
@@ -24,6 +25,7 @@ namespace FormulaTestCases
         public void Construct1()
         {
             Formula f = new Formula("_");
+            Formula g = new Formula(" ");
         }
 
         /// <summary>
@@ -58,6 +60,47 @@ namespace FormulaTestCases
             Formula f = new Formula("2+3");
             Assert.AreEqual(f.Evaluate(v => 0), 5.0, 1e-6);
         }
+        [TestMethod]
+        public void Evaluate11()
+        {
+            Formula f = new Formula("8-5*5");
+            Assert.AreEqual(f.Evaluate(v => 0), -17, 1e-6);
+        }
+
+        [TestMethod]
+        public void Evaluate12()
+        {
+            Formula f = new Formula("8+8+8+8");
+            Assert.AreEqual(f.Evaluate(v => 0), 32, 1e-6);
+        }
+
+        [TestMethod]
+        public void Evaluate14()
+        {
+            Formula f = new Formula("10-10-10-10-10-10-10-10");
+            Assert.AreEqual(f.Evaluate(v => 0), -60, 1e-6);
+        }
+
+        [TestMethod]
+        public void Evaluate15()
+        {
+            Formula f = new Formula("500/100/5");
+            Assert.AreEqual(f.Evaluate(v => 0), 1, 1e-6);
+        }
+
+        [TestMethod]
+        public void Evaluate16()
+        {
+            Formula f = new Formula("45-7+18/4*7");
+            Assert.AreEqual(f.Evaluate(v => 0), 69.5, 1e-6);
+        }
+
+        [TestMethod]
+        public void Evaluate13()
+        {
+            Formula f = new Formula("5*3+8-5");
+            Assert.AreEqual(f.Evaluate(v => 0), 18, 1e-6);
+        }
 
         /// <summary>
         /// The Formula consists of a single variable (x5).  The value of
@@ -70,6 +113,13 @@ namespace FormulaTestCases
         {
             Formula f = new Formula("x5");
             Assert.AreEqual(f.Evaluate(v => 22.5), 22.5, 1e-6);
+        }
+
+        [TestMethod]
+        public void Evaluate21()
+        {
+            Formula f = new Formula("c48757g0g979497");
+            Assert.AreEqual(f.Evaluate(v => 500), 500, 1e-6);
         }
 
         /// <summary>
@@ -97,6 +147,13 @@ namespace FormulaTestCases
             Assert.AreEqual(f.Evaluate(Lookup4), 10.0, 1e-6);
         }
 
+        [TestMethod]
+        public void Evaluate6()
+        {
+            Formula f = new Formula("x + y * x + x * y");
+            Assert.AreEqual(f.Evaluate(Lookup4), 52, 1e-6);
+        }
+
         /// <summary>
         /// This uses one of each kind of token.
         /// </summary>
@@ -105,6 +162,13 @@ namespace FormulaTestCases
         {
             Formula f = new Formula("(x + y) * (z / x) * 1.0");
             Assert.AreEqual(f.Evaluate(Lookup4), 20.0, 1e-6);
+        }
+
+        [TestMethod]
+        public void Evaluate55()
+        {
+            Formula f = new Formula("(z - y) * (z - x) * 1.0");
+            Assert.AreEqual(f.Evaluate(Lookup4), 8, 1e-6);
         }
 
         /// <summary>
