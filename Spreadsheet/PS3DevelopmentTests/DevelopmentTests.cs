@@ -213,5 +213,31 @@ namespace DevelopmentTests
             Assert.IsTrue(t.HasDependents("b"));
             Assert.IsTrue(t.HasDependees("b"));
         }
+
+        //Method to determine if large sets of data are demanding or not on performance
+        [TestMethod()]
+        public void TestLargeData()
+        {
+            char letter1 = 'a';
+            char letter2 = 'b';
+
+            DependencyGraph t = new DependencyGraph();
+            for(int i = 0; i < 100000; i++)
+            {
+                t.AddDependency(letter1.ToString(), letter2.ToString());
+                letter1++;
+                letter2++;
+            }
+
+            letter1 = 'a';
+            letter2 = 'b';
+
+            for (int i = 0; i < 100000; i++)
+            {
+                t.ReplaceDependees(letter1.ToString(), new HashSet<string>() { letter2.ToString(), letter1.ToString() });
+                letter1++;
+                letter2++;
+            }
+        }
     }
 }
