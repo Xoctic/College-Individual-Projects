@@ -49,7 +49,7 @@ namespace Formulas
                 throw new FormulaFormatException("Cannot construct a formula with no tokens");
             }
 
-            int formulaLength = formula.Length - 1;
+            int formulaLength = formula.Length;
             int currentPosition = 0;
             int numberOpenParenthesis = 0;
             int numberClosedParenthesis = 0;
@@ -108,7 +108,16 @@ namespace Formulas
             {
                 throw new FormulaFormatException("Cannot construct a formula with more open parantheses than closed parantheses");
             }
-            
+            if (lastTuple == null)
+            {
+                throw new FormulaFormatException("Cannot construct a formula with no tokens");
+            }
+            if (lastTuple.Item2 == Oper)
+            {
+                throw new FormulaFormatException("Cannot construct a formula with an operator as the last token");
+            }
+
+
         }
         /// <summary>
         /// Evaluates this Formula, using the Lookup delegate to determine the values of variables.  (The
@@ -266,8 +275,8 @@ namespace Formulas
                     }
                     if ((string)operatorStack.Peek() == "-")
                     {
-                        double tempValue2 = Convert.ToDouble(valueStack.Pop());
                         double tempValue = Convert.ToDouble(valueStack.Pop());
+                        double tempValue2 = Convert.ToDouble(valueStack.Pop());
                         double tempResult;
                         operatorStack.Pop();
                         tempResult = tempValue2 - tempValue;
@@ -287,8 +296,12 @@ namespace Formulas
                         }
                         else if((string)operatorStack.Peek() == "/")
                         {
-                            double tempValue = Convert.ToDouble(valueStack.Pop());
                             double tempValue2 = Convert.ToDouble(valueStack.Pop());
+                            double tempValue = Convert.ToDouble(valueStack.Pop());
+                            if (tempValue2 == 0)
+                            {
+                                throw new FormulaEvaluationException("Can't divide by 0");
+                            }
                             double tempResult;
                             operatorStack.Pop();
                             tempResult = tempValue / tempValue2;
