@@ -21,7 +21,7 @@ namespace GradingTests
             /// <summary>
             ///Empty graph should contain nothing
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest1()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -31,7 +31,7 @@ namespace GradingTests
             /// <summary>
             ///Empty graph should contain nothing
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest2()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -42,7 +42,7 @@ namespace GradingTests
             /// <summary>
             ///Empty graph should contain nothing
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest3()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -53,7 +53,7 @@ namespace GradingTests
             /// <summary>
             ///Removing from an empty DG shouldn't fail
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest5()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -63,7 +63,7 @@ namespace GradingTests
             /// <summary>
             ///Replace on an empty DG shouldn't fail
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest6()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -77,7 +77,7 @@ namespace GradingTests
             /// <summary>
             ///Empty graph should contain nothing
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest7()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -90,7 +90,7 @@ namespace GradingTests
             /// <summary>
             ///Empty graph should contain nothing
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest8()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -105,7 +105,7 @@ namespace GradingTests
             /// <summary>
             ///Empty graph should contain nothing
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest9()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -124,7 +124,7 @@ namespace GradingTests
             /// <summary>
             ///Removing from an empty DG shouldn't fail
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest11()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -137,7 +137,7 @@ namespace GradingTests
             /// <summary>
             ///Replace on an empty DG shouldn't fail
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void EmptyTest12()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -154,7 +154,7 @@ namespace GradingTests
             ///It should be possibe to have more than one DG at a time.  This test is
             ///repeated because I want it to be worth more than 1 point.
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void StaticTest1()
             {
                 DependencyGraph t1 = new DependencyGraph();
@@ -164,25 +164,25 @@ namespace GradingTests
                 Assert.AreEqual(0, t2.Size);
             }
 
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void StaticTest2()
             {
                 StaticTest1();
             }
 
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void StaticTest3()
             {
                 StaticTest1();
             }
 
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void StaticTest4()
             {
                 StaticTest1();
             }
 
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void StaticTest5()
             {
                 StaticTest1();
@@ -193,7 +193,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest1()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -207,7 +207,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest3()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -224,7 +224,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest4()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -258,7 +258,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest5()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -292,7 +292,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest6()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -308,7 +308,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest8()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -327,7 +327,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest9()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -363,7 +363,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest10()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -399,7 +399,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest11()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -419,7 +419,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest13()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -442,7 +442,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest14()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -482,7 +482,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest15()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -522,7 +522,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest16()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -540,7 +540,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest18()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -561,7 +561,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest19()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -599,7 +599,7 @@ namespace GradingTests
             /// <summary>
             ///Non-empty graph contains something
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(1000)]
             public void NonEmptyTest20()
             {
                 DependencyGraph t = new DependencyGraph();
@@ -639,7 +639,7 @@ namespace GradingTests
             /// <summary>
             ///Using lots of data
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(5000)]
             public void StressTest1()
             {
                 // Dependency graph
@@ -714,22 +714,22 @@ namespace GradingTests
                 }
             }
 
-            [TestMethod()]
+            [TestMethod, Timeout(5000)]
             public void StressTest2()
             {
                 StressTest1();
             }
-            [TestMethod()]
+            [TestMethod, Timeout(5000)]
             public void StressTest3()
             {
                 StressTest1();
             }
-            [TestMethod()]
+            [TestMethod, Timeout(5000)]
             public void StressTest4()
             {
                 StressTest1();
             }
-            [TestMethod()]
+            [TestMethod, Timeout(5000)]
             public void StressTest5()
             {
                 StressTest1();
@@ -740,7 +740,7 @@ namespace GradingTests
             /// <summary>
             ///Using lots of data with replacement
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(10000)]
             public void StressTest8()
             {
                 // Dependency graph
@@ -816,22 +816,22 @@ namespace GradingTests
                 }
             }
 
-            [TestMethod()]
+            [TestMethod, Timeout(10000)]
             public void StressTest9()
             {
                 StressTest8();
             }
-            [TestMethod()]
+            [TestMethod, Timeout(10000)]
             public void StressTest10()
             {
                 StressTest8();
             }
-            [TestMethod()]
+            [TestMethod, Timeout(10000)]
             public void StressTest11()
             {
                 StressTest8();
             }
-            [TestMethod()]
+            [TestMethod, Timeout(10000)]
             public void StressTest12()
             {
                 StressTest8();
@@ -842,7 +842,7 @@ namespace GradingTests
             /// <summary>
             ///Using lots of data with replacement
             ///</summary>
-            [TestMethod()]
+            [TestMethod, Timeout(15000)]
             public void StressTest15()
             {
                 // Dependency graph
@@ -918,22 +918,22 @@ namespace GradingTests
                 }
             }
 
-            [TestMethod()]
+            [TestMethod, Timeout(15000)]
             public void StressTest16()
             {
                 StressTest15();
             }
-            [TestMethod()]
+            [TestMethod, Timeout(15000)]
             public void StressTest17()
             {
                 StressTest15();
             }
-            [TestMethod()]
+            [TestMethod, Timeout(15000)]
             public void StressTest18()
             {
                 StressTest15();
             }
-            [TestMethod()]
+            [TestMethod, Timeout(15000)]
             public void StressTest19()
             {
                 StressTest15();
