@@ -30,6 +30,12 @@ namespace Dependencies
             dependees = new Dictionary<string, HashSet<string>>();
         }
 
+        public DependencyGraph(DependencyGraph g)
+        {
+            dependents = new Dictionary<string, HashSet<string>>();
+            dependees = new Dictionary<string, HashSet<string>>();
+        }
+
         /// <summary>
         /// The number of dependencies in the DependencyGraph.
         /// </summary>
@@ -44,13 +50,17 @@ namespace Dependencies
         public bool HasDependents(string s)
         {
             bool hasDependents = false;
-            if (s != null)
+            try
             {
                 if (dependees.ContainsKey(s))
                 {
                     hasDependents = true;
                 }
             }
+            catch(Exception e)
+            {
+                throw new ArgumentNullException("Cannot search for dependents if parameter is null");
+            }  
             return hasDependents;
         }
 
