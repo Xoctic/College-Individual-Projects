@@ -849,7 +849,7 @@ namespace GradingTests
                 DependencyGraph t = new DependencyGraph();
 
                 // A bunch of strings to use
-                const int SIZE = 650;
+                const int SIZE = 2;
                 string[] letters = new string[SIZE];
                 for (int i = 0; i < SIZE; i++)
                 {

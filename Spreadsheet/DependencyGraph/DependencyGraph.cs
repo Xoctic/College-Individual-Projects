@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 //Author:  Andrew Hare  u1033940
 
 namespace Dependencies
@@ -147,6 +148,17 @@ namespace Dependencies
                     dependentsSet.Add(t);
                     size++;
                 }
+                else if(dependees.ContainsKey(s) && dependents.ContainsKey(t))
+                {
+                    if(!(dependees[s].Contains(t)))
+                    {
+                        dependees[s].Add(t);
+                    }
+                    if (!(dependents[t].Contains(s)))
+                    {
+                        dependents[t].Add(s);
+                    }
+                }
             }
         }
 
@@ -159,15 +171,27 @@ namespace Dependencies
         {
             if (s != null && t != null)
             {
-                if (dependees.ContainsKey(s) && dependents.ContainsKey(t))
+                if(dependees.ContainsKey(s))
                 {
-                    dependees[s].Remove(t);
-                    dependees.Remove(s);
-                    dependents[t].Remove(s);
-                    dependents.Remove(t);
-                    if (size > 0)
+                    if(dependees[s].Contains(t))
                     {
+                        dependees[s].Remove(t);
                         size--;
+                        if(dependees[s].Count == 0)
+                        {
+                            dependees.Remove(s);
+                        }
+                    }
+                }
+                if(dependents.ContainsKey(t))
+                {
+                    if(dependents[t].Contains(s))
+                    {
+                        dependents[t].Remove(s);
+                        if(dependents[t].Count == 0)
+                        {
+                            dependents.Remove(t);
+                        }
                     }
                 }
             }
@@ -184,15 +208,15 @@ namespace Dependencies
             {
                 if (dependees.ContainsKey(s))
                 {
-                    for(int i = 0; i < dependees[s].Count; i++)
-                    {
-                        size--;
-                    }
-                    dependees[s].Clear();                   
-                    foreach (string element in newDependents)
-                    {
-                        AddDependency(s, element);
-                    }
+                   foreach(string dependent in dependees[s])
+                   {
+                        dependents[dependent].Remove(s);
+                   }
+                    dependees[s].Clear();                
+                }
+                foreach (string element in newDependents)
+                {
+                    AddDependency(s, element);
                 }
             }
         }
@@ -208,15 +232,16 @@ namespace Dependencies
             {
                 if (dependents.ContainsKey(t))
                 {
-                    for (int i = 0; i < dependents[t].Count; i++)
+                    foreach(string dependee in dependents[t])
                     {
+                        dependees[dependee].Remove(t);
                         size--;
                     }
                     dependents[t].Clear();
-                    foreach (string element in newDependees)
-                    {
-                        AddDependency(element, t);
-                    }
+                }
+                foreach (string element in newDependees)
+                {
+                    AddDependency(element, t);
                 }
             }
         }
