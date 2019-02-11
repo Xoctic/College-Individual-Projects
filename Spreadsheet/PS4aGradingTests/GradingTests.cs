@@ -9,31 +9,31 @@ namespace PS4aGradingTests
     public class GradingTests
     {
         [TestMethod, Timeout(1000)]
-        public void ZeroArg1()
+        public void OneArg1()
         {
-            new Formula();
+            new Formula("0");
         }
 
         [TestMethod, Timeout(1000)]
-        public void ZeroArg2()
+        public void OneArg2()
         {
-            Formula f = new Formula();
+            Formula f = new Formula("0");
             Assert.AreEqual(0, f.GetVariables().Count);
         }
 
         [TestMethod, Timeout(1000)]
-        public void ZeroArg3()
+        public void OneArg3()
         {
-            Formula f = new Formula();
-            Assert.AreEqual(0, f.Evaluate(s => 1));
+            Formula f = new Formula("0");
+            Assert.AreEqual(0, f.Evaluate(s => 1), 1e-6);
         }
 
         [TestMethod, Timeout(1000)]
-        public void ZeroArg4()
+        public void OneArg4()
         {
-            Formula f1 = new Formula();
+            Formula f1 = new Formula("0");
             Formula f2 = new Formula(f1.ToString());
-            Assert.AreEqual(0, f2.Evaluate(s => 1));
+            Assert.AreEqual(0, f2.Evaluate(s => 1), 1e-6);
         }
 
         [TestMethod, Timeout(1000)]
