@@ -8,27 +8,27 @@ namespace PS4aGradingTests
     [TestClass]
     public class GradingTests
     {
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ZeroArg1()
         {
             new Formula();
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ZeroArg2()
         {
             Formula f = new Formula();
             Assert.AreEqual(0, f.GetVariables().Count);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ZeroArg3()
         {
             Formula f = new Formula();
             Assert.AreEqual(0, f.Evaluate(s => 1));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ZeroArg4()
         {
             Formula f1 = new Formula();
@@ -36,49 +36,49 @@ namespace PS4aGradingTests
             Assert.AreEqual(0, f2.Evaluate(s => 1));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ThreeArg1()
         {
             Formula f = new Formula("x+y", s => s, s => true);
             Assert.AreEqual(3, f.Evaluate(s => (s == "x") ? 1 : 2));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         [ExpectedException(typeof(FormulaFormatException))]
         public void ThreeArg2()
         {
             Formula f = new Formula("x+y", s => "$", s => true);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         [ExpectedException(typeof(FormulaFormatException))]
         public void ThreeArg3()
         {
             Formula f = new Formula("x+y", s => s, s => false);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         [ExpectedException(typeof(FormulaFormatException))]
         public void ThreeArg4()
         {
             Formula f = new Formula("x+y", s => s == "x" ? "z" : s, s => s != "z");
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         [ExpectedException(typeof(FormulaFormatException))]
         public void ThreeArg5()
         {
             Formula f = new Formula("$", s => "x", s => true);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ThreeArg6()
         {
             Formula f = new Formula("1", s => "x", s => true);
             Assert.AreEqual(1.0, f.Evaluate(s => { throw new UndefinedVariableException(""); }), 1e-6);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ThreeArg7()
         {
             Formula f = new Formula("y", s => "x", s => true);
@@ -86,28 +86,28 @@ namespace PS4aGradingTests
         }
 
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ThreeArg8()
         {
             Formula f = new Formula("1e1 + e", s => "x", s => s == "x");
             Assert.AreEqual(12.0, f.Evaluate(s => (s == "x") ? 2 : 0), 1e-6);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ThreeArg9()
         {
             Formula f = new Formula("xx+y", s => (s == "xx") ? "X" : "z", s => s.Length == 1);
             Assert.AreEqual(10.0, f.Evaluate(s => (s == "X") ? 7 : 3), 1e-6);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ThreeArg10()
         {
             Formula f = new Formula("a + b + c + d", s => "x", s => true);
             Assert.AreEqual(4.0, f.Evaluate(s => (s == "x") ? 1 : 0), 1e-6);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void GetVars1()
         {
             Formula f = new Formula("0");
@@ -115,7 +115,7 @@ namespace PS4aGradingTests
             Assert.IsTrue(expected.SetEquals(f.GetVariables()));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void GetVars2()
         {
             Formula f = new Formula("x");
@@ -124,7 +124,7 @@ namespace PS4aGradingTests
             Assert.IsTrue(expected.SetEquals(f.GetVariables()));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void GetVars3()
         {
             Formula f = new Formula("a * b - c + d / e * 2.5e6");
@@ -138,7 +138,7 @@ namespace PS4aGradingTests
             Assert.IsTrue(expected.SetEquals(actual));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void GetVars4()
         {
             Formula f = new Formula("a * a + b * c - d * d");
@@ -152,7 +152,7 @@ namespace PS4aGradingTests
             Assert.IsTrue(expected.SetEquals(actual));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void GetVars5()
         {
             Formula f = new Formula("x+y", s => s.ToUpper(), s => true);
@@ -162,7 +162,7 @@ namespace PS4aGradingTests
             Assert.IsTrue(expected.SetEquals(f.GetVariables()));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void GetVars6()
         {
             Formula f = new Formula("x+y+z", s => s + s, s => true);
@@ -173,7 +173,7 @@ namespace PS4aGradingTests
             Assert.IsTrue(expected.SetEquals(f.GetVariables()));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ToString1()
         {
             Formula f1 = new Formula("7");
@@ -181,7 +181,7 @@ namespace PS4aGradingTests
             Assert.AreEqual(7.0, f2.Evaluate(s => 0), 1e-6);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ToString2()
         {
             Formula f1 = new Formula("x");
@@ -189,7 +189,7 @@ namespace PS4aGradingTests
             Assert.AreEqual(8.0, f2.Evaluate(s => (s == "x") ? 8 : 0), 1e-6);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ToString3()
         {
             Formula f1 = new Formula("x", s => s.ToUpper(), s => true);
@@ -197,7 +197,7 @@ namespace PS4aGradingTests
             Assert.AreEqual(8.0, f2.Evaluate(s => (s == "X") ? 8 : 0), 1e-6);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ToString4()
         {
             Formula f1 = new Formula("a+b*(c-15)/2");
@@ -205,7 +205,7 @@ namespace PS4aGradingTests
             Assert.AreEqual(24.0, f2.Evaluate(s => char.IsLower(s[0]) ? 16 : 0), 1e-6);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ToString5()
         {
             Formula f1 = new Formula("a+b*(c-15)/2", s => s, s => true);
@@ -213,7 +213,7 @@ namespace PS4aGradingTests
             Assert.AreEqual(24.0, f2.Evaluate(s => char.IsLower(s[0]) ? 16 : 0), 1e-6);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void ToString6()
         {
             Formula f1 = new Formula("a+b*(c-15)/2", s => s.ToUpper(), s => true);
