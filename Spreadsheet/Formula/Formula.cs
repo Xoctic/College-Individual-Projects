@@ -19,105 +19,126 @@ namespace Formulas
     public class Formula
     {
 
-        IEnumerable<Tuple<string, TokenType>> Tokens;
+        private List<Token> formulaTokens;
         /// <summary>
         /// Creates a Formula from a string that consists of a standard infix expression composed
         /// from non-negative floating-point numbers (using C#-like syntax for double/int literals), 
         /// variable symbols (a letter followed by zero or more letters and/or digits), left and right
         /// parentheses, and the four binary operator symbols +, -, *, and /.  White space is
         /// permitted between tokens, but is not required.
-        /// 
-        /// Examples of a valid parameter to this constructor are:
-        ///     "2.5e9 + x5 / 17"
-        ///     "(5 * 2) + 8"
-        ///     "x*y-2+35/9"
-        ///     
-        /// Examples of invalid parameters are:
-        ///     "_"
-        ///     "-5.3"
-        ///     "2 5 + 3"
-        /// 
+ 
         /// If the formula is syntacticaly invalid, throws a FormulaFormatException with an 
         /// explanatory Message.
         /// </summary>
-        public Formula(String formula)
+        public Formula(string formula): this(formula, x => x, x => true)
         {
-            Tokens = GetTokens(formula);
-            
-            if (Tokens.Equals(null))
+
+        }
+        public Formula(string formula, Normalizer normalizer, Validator validator)
+        {
+            if (formula == null || normalizer == null || validator == null)
+            {
+                throw new ArgumentNullException("Cannot construct a formula with a null paramter");
+            }
+            formulaTokens = new List<Token>(GetTokens(formula));
+            if (formulaTokens == null)
             {
                 throw new FormulaFormatException("Cannot construct a formula with no tokens");
             }
-
             int formulaLength = formula.Length;
             int currentPosition = 0;
             int numberOpenParenthesis = 0;
             int numberClosedParenthesis = 0;
-            Tuple<string, TokenType> lastTuple = null; 
-
-            foreach (Tuple<string, TokenType> tuple in Tokens)
+            Token lastToken = new Token(null, Invalid);
+            formulaTokens = new List<Token>();
+            string tempText;
+            foreach (Token token in GetTokens(formula))
             {
-                if (tuple.Item2 == Invalid)
+                if (token.type == Invalid)
                 {
                     throw new FormulaFormatException("Cannot construct a forumula with an Invalid token");
                 }
-                else if (tuple.Item2 == RParen)
+                if (token.type == RParen)
                 {
                     numberClosedParenthesis++;
-                    if(numberClosedParenthesis > numberOpenParenthesis)
+                    if (numberClosedParenthesis > numberOpenParenthesis)
                     {
                         throw new FormulaFormatException("Cannot construct a formula without having the proper amount of open parantheses before a closed parantheses");
                     }
                 }
-                else if (tuple.Item2 == LParen)
+                if (token.type == LParen)
                 {
                     numberOpenParenthesis++;
                 }
-                else if(currentPosition == 0)
+                if (currentPosition == 0)
                 {
-                    if(tuple.Item2 != Number && tuple.Item2 != Var && tuple.Item2 != LParen)
+                    if (token.type != Number && token.type != Var && token.type != LParen)
                     {
                         throw new FormulaFormatException("Cannot construct a forumula without beggining with a number, a variable, or a left parentheses");
                     }
                 }
-                else if(currentPosition == formulaLength)
+                if (currentPosition == formulaLength)
                 {
-                    if (tuple.Item2 != Number && tuple.Item2 != Var && tuple.Item2 != RParen)
+                    if (token.type != Number && token.type != Var && token.type != RParen)
                     {
                         throw new FormulaFormatException("Cannot construct a forumula without ending with a number, a variable, or a right parentheses");
                     }
                 }
-                else if(lastTuple.Item2 == LParen || lastTuple.Item2 == Oper)
+                if (lastToken.type == LParen || lastToken.type == Oper)
                 {
-                    if(tuple.Item2 != Number && tuple.Item2 != Var && tuple.Item2 != LParen && tuple.Item1 != " ")
+                    if (token.type != Number && token.type != Var && token.type != LParen && token.text != " ")
                     {
                         throw new FormulaFormatException("Cannot construct a forumula without having the proper sequence of tokens");
                     }
                 }
-                else if (lastTuple.Item2 == Number || lastTuple.Item2 == Var || lastTuple.Item2 == RParen)
+                if (lastToken.type == Number || lastToken.type == Var || lastToken.type == RParen)
                 {
-                    if (tuple.Item2 != Oper && tuple.Item2 != RParen && tuple.Item1 != " ")
+                    if (token.type != Oper && token.type != RParen && token.text != " ")
                     {
                         throw new FormulaFormatException("Cannot construct a forumula without having the proper sequence of tokens");
                     }
                 }
-                lastTuple = tuple;
+                if(token.type == Var)
+                {
+                    tempText = normalizer(token.text);
+                    if(!validator(tempText))
+                    {
+                        throw new FormulaFormatException("Cannot construct a formula with a false validator");
+                    }
+                    formulaTokens.Add(new Token(tempText, token.type));
+                }
+                else
+                {
+                    formulaTokens.Add(new Token(token.text, token.type));
+                }
+                lastToken = token;
                 currentPosition++;
             }
             if (numberOpenParenthesis != numberClosedParenthesis)
             {
                 throw new FormulaFormatException("Cannot construct a formula with more open parantheses than closed parantheses");
             }
-            if (lastTuple == null)
+            if (lastToken.type == Invalid)
             {
                 throw new FormulaFormatException("Cannot construct a formula with no tokens");
             }
-            if (lastTuple.Item2 == Oper)
+            if (lastToken.type == Oper)
             {
                 throw new FormulaFormatException("Cannot construct a formula with an operator as the last token");
             }
+        }
 
+        private struct Token
+        {
+            public string text;
 
+            public TokenType type;
+            
+            public Token(string _text, TokenType _type)
+            {
+                text = _text;
+                type = _type;
+            }
         }
         /// <summary>
         /// Evaluates this Formula, using the Lookup delegate to determine the values of variables.  (The
@@ -134,9 +155,9 @@ namespace Formulas
             Stack operatorStack = new Stack();
             double result = 0;
             
-            foreach (Tuple<string, TokenType> tuple in Tokens)
+            foreach (Token token in formulaTokens)
             {
-                if(tuple.Item2 == Number)
+                if(token.type == Number)
                 {
                     if (operatorStack.Count != 0)
                     {
@@ -145,37 +166,37 @@ namespace Formulas
                             double tempValue = Convert.ToDouble(valueStack.Pop());
                             double tempResult;
                             operatorStack.Pop();
-                            tempResult = Convert.ToDouble(tuple.Item1) * tempValue;
+                            tempResult = Convert.ToDouble(token.text) * tempValue;
                             valueStack.Push(tempResult);
                         }
                         else if ((string)operatorStack.Peek() == "/")
                         {
-                            if(Convert.ToDouble(tuple.Item1) == 0)
+                            if(Convert.ToDouble(token.text) == 0)
                             {
                                 throw new FormulaEvaluationException("Can't divide by 0");
                             }
                             double tempValue = Convert.ToDouble(valueStack.Pop());
                             double tempResult;
                             operatorStack.Pop();
-                            tempResult = tempValue / Convert.ToDouble(tuple.Item1);
+                            tempResult = tempValue / Convert.ToDouble(token.text);
                             valueStack.Push(tempResult);
                         }
                         else
                         {
-                            valueStack.Push(tuple.Item1);
+                            valueStack.Push(token.text);
                         }
                     }
                     else
                     {
-                        valueStack.Push(tuple.Item1);
+                        valueStack.Push(token.text);
                     }
                 }
-                else if(tuple.Item2 == Var)
+                else if(token.type == Var)
                 {
                     double tempVar;
                     try
                     {
-                        tempVar = lookup(tuple.Item1);
+                        tempVar = lookup(token.text);
                     }
                     catch
                     {
@@ -213,19 +234,19 @@ namespace Formulas
                         valueStack.Push(tempVar);
                     }
                 }
-                else if(tuple.Item2 == Oper)
+                else if(token.type == Oper)
                 {
                     bool operatorWasPushed = false;
                     if (operatorStack.Count != 0)
                     {
-                        if (tuple.Item1 == "*")
+                        if (token.text == "*")
                         {
-                            operatorStack.Push(tuple.Item1);
+                            operatorStack.Push(token.text);
                             operatorWasPushed = true;
                         }
-                        else if (tuple.Item1 == "/")
+                        else if (token.text == "/")
                         {
-                            operatorStack.Push(tuple.Item1);
+                            operatorStack.Push(token.text);
                             operatorWasPushed = true;
                         }
                         else if ((string)operatorStack.Peek() == "+" && operatorWasPushed == false)
@@ -236,7 +257,7 @@ namespace Formulas
                             operatorStack.Pop();
                             tempResult = tempValue + tempValue2;
                             valueStack.Push(tempResult);
-                            operatorStack.Push(tuple.Item1);
+                            operatorStack.Push(token.text);
                         }
                         else if ((string)operatorStack.Peek() == "-" && operatorWasPushed == false)
                         {
@@ -246,23 +267,23 @@ namespace Formulas
                             operatorStack.Pop();
                             tempResult = tempValue - tempValue2;
                             valueStack.Push(tempResult);
-                            operatorStack.Push(tuple.Item1);
+                            operatorStack.Push(token.text);
                         }
                         else
                         {
-                            operatorStack.Push(tuple.Item1);
+                            operatorStack.Push(token.text);
                         }
                     }
                     else
                         {
-                            operatorStack.Push(tuple.Item1);
+                            operatorStack.Push(token.text);
                         }
                 }
-                else if(tuple.Item2 == LParen)
+                else if(token.type == LParen)
                 {
-                    operatorStack.Push(tuple.Item1);
+                    operatorStack.Push(token.text);
                 }
-                else if(tuple.Item2 == RParen)
+                else if(token.type == RParen)
                 {
                     if ((string)operatorStack.Peek() == "+")
                     {
@@ -333,12 +354,35 @@ namespace Formulas
             return result;
         }
 
+        public ISet<string> GetVariables()
+        {
+            HashSet<string> variablesToReturn = new HashSet<string>();
+
+            foreach(Token token in formulaTokens)
+            {
+                if(token.type == Var)
+                {
+                    variablesToReturn.Add(token.text);
+                }
+            }
+            return variablesToReturn;
+        }
+
+        public override string ToString()
+        {
+            string stringToReturn = null;
+            foreach(Token token in formulaTokens)
+            {
+                stringToReturn += token.text;
+            }
+            return stringToReturn;
+        }
         /// <summary>
         /// Given a formula, enumerates the tokens that compose it.  Each token is described by a
         /// Tuple containing the token's text and TokenType.  There are no empty tokens, and no
         /// token contains white space.
         /// </summary>
-        private static IEnumerable<Tuple<string, TokenType>> GetTokens(String formula)
+        private static IEnumerable<Token> GetTokens(String formula)
         {
             // Patterns for individual tokens.
             String lpPattern = @"\(";
@@ -404,7 +448,7 @@ namespace Formulas
                     }
 
                     // Yield the token
-                    yield return new Tuple<string, TokenType>(match.Value, type);
+                    yield return new Token(match.Value, type);
                 }
 
                 // Look for the next match
@@ -457,6 +501,10 @@ namespace Formulas
     /// don't is up to the implementation of the method.
     /// </summary>
     public delegate double Lookup(string var);
+
+    public delegate string Normalizer(string s);
+
+    public delegate bool Validator(string s);
 
     /// <summary>
     /// Used to report that a Lookup delegate is unable to determine the value
