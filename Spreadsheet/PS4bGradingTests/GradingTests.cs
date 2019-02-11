@@ -8,7 +8,7 @@ namespace PS4GradingTests
     [TestClass]
     public class GradingTests
     {
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Null1()
         {
@@ -16,7 +16,7 @@ namespace PS4GradingTests
             d.AddDependency("a", null);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Null2()
         {
@@ -24,7 +24,7 @@ namespace PS4GradingTests
             d.HasDependees(null);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void Copy1()
         {
             var d1 = new DependencyGraph();
@@ -33,7 +33,7 @@ namespace PS4GradingTests
             Assert.AreEqual(0, d2.Size);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void Copy2()
         {
             var d1 = new DependencyGraph();
@@ -43,7 +43,7 @@ namespace PS4GradingTests
             Assert.AreEqual(0, d2.Size);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void Copy3()
         {
             var d1 = new DependencyGraph();
@@ -56,7 +56,7 @@ namespace PS4GradingTests
             Assert.IsTrue(d2.HasDependents("c"));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void Copy4()
         {
             var d1 = new DependencyGraph();
@@ -66,7 +66,7 @@ namespace PS4GradingTests
             Assert.IsTrue(d2.HasDependees("b"));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void Copy5()
         {
             var d1 = new DependencyGraph();
@@ -81,7 +81,7 @@ namespace PS4GradingTests
             Assert.AreEqual(1, new List<string>(d2.GetDependents("a")).Count);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void Copy6()
         {
             var d1 = new DependencyGraph();
@@ -96,7 +96,7 @@ namespace PS4GradingTests
             Assert.AreEqual(1, new List<string>(d2.GetDependees("a")).Count);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(3000)]
         public void Copy7()
         {
             var d1 = new DependencyGraph();
@@ -133,7 +133,7 @@ namespace PS4GradingTests
             Assert.AreEqual(5050 + 100, d2.Size);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(3000)]
         public void Copy8()
         {
             Copy7();
