@@ -14,6 +14,58 @@ namespace PS4aDevelopmentTests
         {
             Formula f = new Formula("x+y", s => s == "x" ? "z" : s, s => s != "z");
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ThreeArgWithNull1()
+        {
+            Formula f = new Formula(null, s => s == "x" ? "z" : s, s => s != "z");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ThreeArgWithNull2()
+        {
+            Formula f = new Formula("x+y", null, s => s != "z");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ThreeArgWithNull3()
+        {
+            Formula f = new Formula("x+y", s => s == "x" ? "z" : s, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ThreeArgWithNull4()
+        {
+            Formula f = new Formula("y", s => "x", s => true);
+            f.Evaluate(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormulaFormatException))]
+        public void ThreeArgWithInvalidNormalize()
+        {
+            Formula f = new Formula("y", s => "800", s => true);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormulaFormatException))]
+        public void ThreeArgWithInvalidValidate()
+        {
+            Formula f = new Formula("y", s => "x", s => false);
+        }
+
+        [TestMethod()]
+        [ExpectedException(typeof(FormulaEvaluationException))]
+        public void DivideByZero()
+        {
+            Formula f = new Formula("8 / xx");
+            f.Evaluate(s => 0);
+        }
+
         [TestMethod]
         public void ThreeArg7()
         {
