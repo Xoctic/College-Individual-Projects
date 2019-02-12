@@ -9,11 +9,13 @@ using System.Linq;
 namespace Dependencies
 {
     /// <summary>
-
+    /// Dependency Graph used to store dependencies.
+    /// Uses two dictionaries to hold the dependees and the dependents.
+    /// </summary>
     public class DependencyGraph
     {
-        //Dictionaries used to store Dependencies
-        //Each dictionary contains a string key and a HashSet value
+        //Dictionaries used to store a set of dependencies.
+        //Each dictionary contains a string key and a HashSet value.
         //Each Hashset value is a subset containing dependess and dependents.
         private Dictionary<string, HashSet<string>> dependees;
         private Dictionary<string, HashSet<string>> dependents;
@@ -30,14 +32,21 @@ namespace Dependencies
             dependees = new Dictionary<string, HashSet<string>>();
         }
 
+        /// <summary>
+        /// Creates an independent copy of the DependencyGraph passed in.
+        /// </summary>
         public DependencyGraph(DependencyGraph g)
         {
             if(g == null)
             {
                 throw new ArgumentNullException("Cannot copy a null dependency graph");
             }
+            //Copies over the size variable.
+            int temp = g.size;
+            size = temp;
             dependents = new Dictionary<string, HashSet<string>>();
             dependees = new Dictionary<string, HashSet<string>>();
+            //Copies over the key dependees and their value HashSet.
             foreach(string key in g.dependees.Keys)
             {
                 HashSet<string> setToAdd = new HashSet<string>();
@@ -47,6 +56,7 @@ namespace Dependencies
                 }
                 dependees.Add(key, setToAdd);
             }
+            //Copies over the key dependents and their value HashSet.
             foreach (string key in g.dependents.Keys)
             {
                 HashSet<string> setToAdd = new HashSet<string>();
@@ -157,6 +167,7 @@ namespace Dependencies
             {
                 throw new ArgumentNullException("Cannot add a dependency containing null values");
             }
+            //Checks if dependee and dependent do not exist in the DependencyGraph.
             if (!(dependees.ContainsKey(s)) && !(dependents.ContainsKey(t)))
             {
                 dependees.Add(s, new HashSet<string>());
@@ -165,6 +176,7 @@ namespace Dependencies
                 dependents[t].Add(s);
                 size++;
             }
+            //Checks if dependee does exist, but dependent does not exist in the DependencyGraph.
             else if (dependees.ContainsKey(s) && !(dependents.ContainsKey(t)))
             {
                 dependents.Add(t, new HashSet<string>());
@@ -172,6 +184,7 @@ namespace Dependencies
                 dependents[t].Add(s);
                 size++;
             }
+            //Checks if dependent does exist, but dependee does not exist in the DependencyGraph.
             else if (!(dependees.ContainsKey(s)) && dependents.ContainsKey(t))
             {
                 dependees.Add(s, new HashSet<string>());
@@ -250,6 +263,7 @@ namespace Dependencies
             }
             foreach (string element in newDependents)
             {
+                //Checks if none of the elements to add are null.
                 if (element == null)
                 {
                     throw new ArgumentNullException("Null string encountered when trying to replace Dependents");
@@ -281,6 +295,7 @@ namespace Dependencies
             }
             foreach (string element in newDependees)
             {
+                //Checks if none of the elements to add are null.
                 if (element == null)
                 {
                     throw new ArgumentNullException("Null string encountered when trying to replace Dependees");
