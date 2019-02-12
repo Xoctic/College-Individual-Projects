@@ -185,6 +185,7 @@ namespace Formulas
             Stack operatorStack = new Stack();
             double result = 0;
             
+            //Loop through each token in formulaTokens.
             foreach (Token token in formulaTokens)
             {
                 if(token.type == Number)
@@ -201,6 +202,7 @@ namespace Formulas
                         }
                         else if ((string)operatorStack.Peek() == "/")
                         {
+                            //Cannot divide by zero.
                             if(Convert.ToDouble(token.text) == 0)
                             {
                                 throw new FormulaEvaluationException("Can't divide by 0");
@@ -224,6 +226,7 @@ namespace Formulas
                 else if(token.type == Var)
                 {
                     double tempVar;
+                    //Checks if we can lookup the variable with the given Lookup delegate.
                     try
                     {
                         tempVar = lookup(token.text);
@@ -244,6 +247,7 @@ namespace Formulas
                         }
                         else if ((string)operatorStack.Peek() == "/")
                         {
+                            //Cannot divide by zero.
                             if (tempVar == 0)
                             {
                                 throw new FormulaEvaluationException("Can't divide by 0");
@@ -266,6 +270,7 @@ namespace Formulas
                 }
                 else if(token.type == Oper)
                 {
+                    //boolean variable to check if an operator was pushed to the operatorStack.
                     bool operatorWasPushed = false;
                     if (operatorStack.Count != 0)
                     {
@@ -349,6 +354,7 @@ namespace Formulas
                         {
                             double tempValue2 = Convert.ToDouble(valueStack.Pop());
                             double tempValue = Convert.ToDouble(valueStack.Pop());
+                            //Cannot divide by zero.
                             if (tempValue2 == 0)
                             {
                                 throw new FormulaEvaluationException("Can't divide by 0");
