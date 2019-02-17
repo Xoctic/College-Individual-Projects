@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Formulas;
 using Dependencies;
 using System.Text.RegularExpressions;
-using static SS.TokenType;
 using static SS.Cells;
+//Author:  Andrew Hare  u1033940
 
 namespace SS
 {
@@ -55,12 +55,14 @@ namespace SS
     /// </summary>
     public class Spreadsheet : AbstractSpreadsheet
     {
-  
+        //Dictionary to store string name and Cell value.
+        //Each cell contains contents and value.
         private Dictionary<string, Cells.Cell> cells;
 
+        //A graph to keep track of what cells depend on each other
         private DependencyGraph DependencyGraph;
         /// <summary>
-        /// 
+        /// Constructs an empty spreadsheet
         /// </summary>
         public Spreadsheet()
         {
@@ -75,19 +77,15 @@ namespace SS
         /// </summary>
         public override object GetCellContents(string name)
         {
-            if(name == null)
+            if (name == null)
             {
                 throw new InvalidNameException();
             }
-            foreach(Token token in isValidCell(name))
+            if (isValidCell(name) == false)
             {
-                if(token.type == Invalid)
-                {
-                    throw new InvalidNameException();
-                }
-                break;
+                throw new InvalidNameException();
             }
-            if(!(cells.ContainsKey(name)))
+            if (!(cells.ContainsKey(name)))
             {
                 return "";
             }
@@ -99,11 +97,11 @@ namespace SS
         public override IEnumerable<string> GetNamesOfAllNonemptyCells()
         {
             HashSet<string> toReturn = new HashSet<string>();
-            foreach(Cell cell in cells.Values)
+            foreach (string s in cells.Keys)
             {
-                if((string)cell.content != "")
+                if(!((object)cells[s].content == ""))
                 {
-                    toReturn.Add((string)cell.content);
+                    toReturn.Add(s);
                 }
             }
             return toReturn;
@@ -120,22 +118,18 @@ namespace SS
         /// </summary>
         public override ISet<string> SetCellContents(string name, double number)
         {
-            foreach (Token token in isValidCell(name))
-            {
-                if (token.type == Invalid)
-                {
-                    throw new InvalidNameException();
-                }
-                break;
-            }
             if (name == null)
+            {
+                throw new InvalidNameException();
+            }
+            if (isValidCell(name) == false)
             {
                 throw new InvalidNameException();
             }
             HashSet<string> toReturn = new HashSet<string>();
             toReturn.Add(name);
             changeCellContents(name, number);
-            foreach (string s in DependencyGraph.GetDependents(name))
+            foreach (string s in DependencyGraph.GetDependees(name))
             {
                 toReturn.Add(s);
             }
@@ -155,22 +149,18 @@ namespace SS
         /// </summary>
         public override ISet<string> SetCellContents(string name, string text)
         {
-            foreach (Token token in isValidCell(name))
-            {
-                if (token.type == Invalid)
-                {
-                    throw new InvalidNameException();
-                }
-                break;
-            }
             if (name == null)
+            {
+                throw new InvalidNameException();
+            }
+            if (isValidCell(name) == false)
             {
                 throw new InvalidNameException();
             }
             HashSet<string> toReturn = new HashSet<string>();
             toReturn.Add(name);
             changeCellContents(name, text);
-            foreach(string s in DependencyGraph.GetDependents(name))
+            foreach (string s in DependencyGraph.GetDependees(name))
             {
                 toReturn.Add(s);
             }
@@ -193,15 +183,11 @@ namespace SS
         /// </summary>
         public override ISet<string> SetCellContents(string name, Formula formula)
         {
-            foreach(Token token in isValidCell(name))
-            {
-                if(token.type == Invalid)
-                {
-                    throw new InvalidNameException();
-                }
-                break;
-            }
             if (name == null)
+            {
+                throw new InvalidNameException();
+            }
+            if (isValidCell(name) == false)
             {
                 throw new InvalidNameException();
             }
@@ -209,13 +195,15 @@ namespace SS
             toReturn.Add(name);
             changeCellContents(name, formula);
 
+            //Get all the variables from formula and add them if they exist to the dependency graph.
             foreach (string s in formula.GetVariables())
             {
                 DependencyGraph.AddDependency(s, name);
             }
 
+            //Finds which cells will need recalculation
             GetCellsToRecalculate(name);
-            foreach (string s in DependencyGraph.GetDependents(name))
+            foreach (string s in DependencyGraph.GetDependees(name))
             {
                 toReturn.Add(s);
             }
@@ -241,6 +229,10 @@ namespace SS
         protected override IEnumerable<string> GetDirectDependents(string name)
         {
             if (name == null)
+            {
+                throw new InvalidNameException();
+            }
+            if (isValidCell(name) == false)
             {
                 throw new InvalidNameException();
             }
@@ -270,86 +262,40 @@ namespace SS
             }
         }
         /// <summary>
-        /// Token struct to store a Tokens text and type.
-        /// </summary>
-        private struct Token
-        {
-            public string text;
-
-            public TokenType type;
-
-            public Token(string _text, TokenType _type)
-            {
-                text = _text;
-                type = _type;
-            }
-        }
-        /// <summary>
         /// Helper method to detect whether or not a name for a cell is valid.
         /// </summary>
-        private static IEnumerable<Token> isValidCell(string s)
+        private bool isValidCell(string s)
         {
 
-            String validCell = @"[a-zA-Z][a-zA-Z]*[1-9][0-9]*";
+            String validCell = "^([a-zA-Z][a-zA-Z]*[1-9][0-9]*)$";
 
-            String tokenPattern = String.Format("({0})",
-                                            validCell);
-
-            Regex r = new Regex(tokenPattern, RegexOptions.IgnorePatternWhitespace);
+            Regex r = new Regex(validCell);
 
             Match match = r.Match(s);
 
-            while (match.Success)
-            {
-                TokenType type;
-                if (match.Groups[1].Success)
-                {
-                    type = ValidCell;
-                }
-                else if (match.Groups[2].Success)
-                {
-                    type = Invalid;
-                }
-                else
-                {
-                    // We shouldn't get here
-                    throw new InvalidOperationException("Regular exception failed in GetTokens");
-                }
-                yield return new Token(match.Value, type);
-            }
+            bool isMatch = match.Success;
+
+            return isMatch;
         }
     }
     /// <summary>
-    /// 
+    /// Cell class to store the cell data
     /// </summary>
     public class Cells
     {
+        /// <summary>
+        /// Cell struct 
+        /// </summary>
         public struct Cell
         {
+            /// <summary>
+            /// content stores the contents of the cell.
+            /// </summary>
             public object content;
-
+            /// <summary>
+            /// value stores the value of the cell.
+            /// </summary>
             public object value;
-
-            public Cell(object _content, object _value)
-            {
-                content = _content;
-                value = _value;
-            }
         }
     }
-        /// <summary>
-        /// 
-        /// </summary>
-        public enum TokenType
-        {
-            /// <summary>
-            /// Valid Cell
-            /// </summary>
-            ValidCell,
-
-            /// <summary>
-            /// Invalid token
-            /// </summary>
-            Invalid
-        }
-    }
+}
