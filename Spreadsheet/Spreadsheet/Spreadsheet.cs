@@ -129,7 +129,7 @@ namespace SS
             HashSet<string> toReturn = new HashSet<string>();
             toReturn.Add(name);
             changeCellContents(name, number);
-            foreach (string s in DependencyGraph.GetDependees(name))
+            foreach (string s in GetCellsToRecalculate(name))
             {
                 toReturn.Add(s);
             }
@@ -153,6 +153,10 @@ namespace SS
             {
                 throw new InvalidNameException();
             }
+            if(text == null)
+            {
+                throw new ArgumentNullException("Cannot set cell contents with a null text");
+            }
             if (isValidCell(name) == false)
             {
                 throw new InvalidNameException();
@@ -160,7 +164,7 @@ namespace SS
             HashSet<string> toReturn = new HashSet<string>();
             toReturn.Add(name);
             changeCellContents(name, text);
-            foreach (string s in DependencyGraph.GetDependees(name))
+            foreach (string s in GetCellsToRecalculate(name))
             {
                 toReturn.Add(s);
             }
@@ -193,20 +197,31 @@ namespace SS
             }
             HashSet<string> toReturn = new HashSet<string>();
             toReturn.Add(name);
-            changeCellContents(name, formula);
 
+            //if(cells.ContainsKey(name))
+            //{
+            //    Formula tempFormula = (Formula)cells[name].content;
+            //    if(tempFormula.GetVariables() != formula.GetVariables())
+            //    {
+            //        foreach(string s in tempFormula.GetVariables())
+            //        {
+            //            DependencyGraph.RemoveDependency(name, s);
+            //        }
+            //    }
+            //}
+            
             //Get all the variables from formula and add them if they exist to the dependency graph.
             foreach (string s in formula.GetVariables())
             {
-                DependencyGraph.AddDependency(s, name);
+                DependencyGraph.AddDependency(name, s);
             }
 
             //Finds which cells will need recalculation
-            GetCellsToRecalculate(name);
-            foreach (string s in DependencyGraph.GetDependees(name))
+            foreach (string s in GetCellsToRecalculate(name))
             {
                 toReturn.Add(s);
             }
+            changeCellContents(name, formula);
             return toReturn;
         }
         /// <summary>
@@ -296,6 +311,15 @@ namespace SS
             /// value stores the value of the cell.
             /// </summary>
             public object value;
+            
+            /// <summary>
+            /// Allows the abilitiy to set the fields
+            /// </summary>
+            public Cell(object _content, object _value)
+            {
+                content = _content;
+                value = _value;
+            }
         }
     }
 }
